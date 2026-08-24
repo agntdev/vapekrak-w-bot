@@ -7,7 +7,7 @@
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Generate personal referral link"
+              "text": "Share your referral link:\nhttps://t.me/test_bot?start=ref-1\n\nStore credit: 0.00 zł"
             }
           }
         ],

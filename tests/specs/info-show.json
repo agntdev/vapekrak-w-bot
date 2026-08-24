@@ -7,7 +7,7 @@
           {
             "method": "sendMessage",
             "payload": {
-              "text": "View store information"
+              "text": "VapeShop Kraków\nSelf-pickup in Kraków. Payment is cash on pickup.\n\nProducts are intended for adults. Please use nicotine products responsibly."
             }
           }
         ],

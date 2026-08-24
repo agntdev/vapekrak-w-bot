@@ -7,7 +7,7 @@
           {
             "method": "sendMessage",
             "payload": {
-              "text": "View product categories and items"
+              "text": "The catalog is being prepared. Please check back soon."
             }
           }
         ],

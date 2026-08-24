@@ -1,15 +1,16 @@
 import { Composer } from "grammy";
-import { createBot, type BotContext, type CreateBotOptions } from "./toolkit/index.js";
+import { createBot, resolveSessionStorage, type BotContext, type CreateBotOptions } from "./toolkit/index.js";
 import type { StorageAdapter } from "grammy";
+import type { ShopData } from "./shop.js";
 
 // The per-chat session shape (ephemeral conversation state only). Extend as the
 // bot grows. Durable domain data must NOT live here — use the toolkit's
 // persistent storage (see AGENTS.md).
 export interface Session {
-  // example: step?: "awaiting_amount";
+  flow?: import("./shop.js").Flow;
 }
 
-export type Ctx = BotContext<Session>;
+export type Ctx = BotContext<Session> & { shop?: ShopData };
 
 /**
  * BuildBotOptions lets a runtime-specific ENTRY POINT (never a feature handler)
@@ -48,6 +49,16 @@ export async function buildBot(token: string, opts: BuildBotOptions = {}) {
     storage: opts.storage,
     telemetryEnv: opts.telemetryEnv,
     telemetryReporterOptions: opts.telemetryReporterOptions,
+  });
+  // Domain records use an explicit shared key and are therefore visible to
+  // shoppers and the owner alike. Conversation state remains in ctx.session.
+  const domainStorage: StorageAdapter<ShopData> = opts.storage
+    ? (opts.storage as unknown as StorageAdapter<ShopData>)
+    : resolveSessionStorage<ShopData>(undefined);
+  bot.use(async (ctx, next) => {
+    (ctx as Ctx).shop = await domainStorage.read("vapeshop:domain");
+    await next();
+    if ((ctx as Ctx).shop) await domainStorage.write("vapeshop:domain", (ctx as Ctx).shop as ShopData);
   });
 
   const handlers = opts.handlers ?? (await loadHandlersFromDisk());
