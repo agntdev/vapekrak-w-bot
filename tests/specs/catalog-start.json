@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Browse Catalog",
+    "steps": [
+      {
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "View product categories and items"
+            }
+          }
+        ],
+        "send": {
+          "callback": "catalog:start"
+        }
+      }
+    ]
+  }
+]
