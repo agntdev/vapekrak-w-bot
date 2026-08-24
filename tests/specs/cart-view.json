@@ -7,7 +7,7 @@
           {
             "method": "sendMessage",
             "payload": {
-              "text": "View and manage cart items"
+              "text": "Your cart is empty. Browse the catalog to add products."
             }
           }
         ],

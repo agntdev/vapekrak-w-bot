@@ -1,6 +1,7 @@
 import { Composer } from "grammy";
 import type { Ctx } from "../bot.js";
 import { mainMenuKeyboard } from "../toolkit/index.js";
+import { data, userKey } from "../shop.js";
 
 // The /start handler renders the bot's MAIN MENU — the primary way users operate
 // a button-first bot. A feature adds its own button by calling
@@ -9,9 +10,18 @@ import { mainMenuKeyboard } from "../toolkit/index.js";
 // file to add a feature. Send ONE message — no placeholder line above the menu.
 const composer = new Composer<Ctx>();
 
-const WELCOME = "👋 Welcome! Tap a button below to get started.";
+const WELCOME = "VapeShop Kraków\nChoose a section below.";
 
 composer.command("start", async (ctx) => {
+  const code = ctx.match?.trim();
+  if (code?.startsWith("ref-")) {
+    const referrer = Number(code.slice(4));
+    if (Number.isSafeInteger(referrer) && referrer > 0 && referrer !== ctx.from?.id) {
+      const shop = data(ctx);
+      const key = userKey(ctx);
+      if (!shop.referrals[key]) shop.referrals[key] = { referrer_id: referrer, referee_id: Number(key), reward_balance: 0, rewarded: false };
+    }
+  }
   await ctx.reply(WELCOME, { reply_markup: mainMenuKeyboard() });
 });
 

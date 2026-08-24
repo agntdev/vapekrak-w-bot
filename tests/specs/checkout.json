@@ -1,0 +1,11 @@
+[
+  {
+    "name": "Checkout explains that a cart is needed",
+    "steps": [
+      {
+        "send": { "callback": "checkout:start" },
+        "expect": [{ "method": "editMessageText", "payload": { "text": "Your cart is empty. Add a product before checkout." } }]
+      }
+    ]
+  }
+]
